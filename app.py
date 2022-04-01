@@ -6,13 +6,6 @@ import numpy as np
 # Explicitly seed the RNG for deterministic results
 np.random.seed(0)
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-
-df = pd.DataFrame(np.random.randn(1000, 4), columns=list("ABCD"))
-st.experimental_data_grid(df)
-
 st.header("Various data types")
 
 from string import ascii_uppercase, ascii_lowercase, digits
