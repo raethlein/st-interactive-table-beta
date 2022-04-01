@@ -165,3 +165,13 @@ st.experimental_data_grid(np.array([]))
 
 st.header("Empty two-column dataframes")
 st.experimental_data_grid(pd.DataFrame({"lat": [], "lon": []}))
+
+st.header("Emojis")
+dict = {
+    "brand 🚗": ["Ford", "KIA", "Toyota", "Tesla"],
+    "model 🚙": ["Mustang", "Optima", "Corolla", "Model 3"],
+    "year 📆": [1964, 2007, 2022, 2021],
+    "color 🌈": ["Black ⚫", "Red 🔴", "White ⚪", "Red 🔴"],
+    "emoji 🚀🚀": ["👨🏻‍🚀", "👩🏻‍🚀", "👩🏻‍🚒🚀", "👨🏻‍🚒"],
+}
+st.experimental_data_grid(dict)
