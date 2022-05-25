@@ -1,3 +1,17 @@
+# Copyright 2018-2022 Streamlit Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import random
 import streamlit as st
 import pandas as pd
@@ -11,19 +25,19 @@ st.header("Test datetime handling:")
 df = pd.DataFrame({"str": ["2020-04-14 00:00:00"]})
 df["notz"] = pd.to_datetime(df["str"])
 df["yaytz"] = pd.to_datetime(df["str"]).dt.tz_localize("Europe/Moscow")
-st.experimental_data_grid(df)
+st.dataframe(df)
 
 st.header("Empty dataframes")
-st.experimental_data_grid(pd.DataFrame([]))
-st.experimental_data_grid(np.array(0))
-st.experimental_data_grid()
-st.experimental_data_grid([])
+st.dataframe(pd.DataFrame([]))
+st.dataframe(np.array(0))
+st.dataframe()
+st.dataframe([])
 
 st.header("Empty one-column dataframes")
-st.experimental_data_grid(np.array([]))
+st.dataframe(np.array([]))
 
 st.header("Empty two-column dataframes")
-st.experimental_data_grid(pd.DataFrame({"lat": [], "lon": []}))
+st.dataframe(pd.DataFrame({"lat": [], "lon": []}))
 
 st.header("Custom index: dates")
 df = pd.DataFrame(
@@ -31,11 +45,11 @@ df = pd.DataFrame(
     index=pd.date_range("1/1/2000", periods=8),
     columns=["A", "B", "C", "D"],
 )
-st.experimental_data_grid(df)
+st.dataframe(df)
 
 st.header("Custom index: strings")
 df = pd.DataFrame(np.random.randn(6, 4), index=list("abcdef"), columns=list("ABCD"))
-st.experimental_data_grid(df)
+st.dataframe(df)
 
 st.header("Multi Index")
 df = pd.DataFrame(
@@ -45,16 +59,26 @@ df = pd.DataFrame(
         np.array(["one", "two", "one", "two", "one", "two", "one", "two"]),
     ],
 )
-st.experimental_data_grid(df)
+st.dataframe(df)
 
 st.header("Index in Place")
 df = pd.DataFrame(np.random.randn(6, 4), columns=list("ABCD"))
 df.set_index("C", inplace=True)
-st.experimental_data_grid(df)
+st.dataframe(df)
 
 st.header("Pandas Styler: Value formatting")
 df = pd.DataFrame({"test": [3.1423424, 3.1]})
-st.experimental_data_grid(df.style.format({"test": "{:.2f}"}))
+st.dataframe(df.style.format({"test": "{:.2f}"}))
+
+st.header("Pandas Styler: Background color")
+
+
+def highlight_first(value):
+    return "background-color: yellow" if value == 0 else ""
+
+
+df = pd.DataFrame(np.arange(0, 100, 1).reshape(10, 10))
+st.dataframe(df.style.applymap(highlight_first))
 
 st.header("Pandas Styler: Background and font styling")
 
@@ -79,7 +103,7 @@ styled_df.apply(
     highlight_max, props="color:white;background-color:pink;", axis=1
 ).apply(highlight_max, props="color:white;background-color:purple", axis=None)
 
-st.experimental_data_grid(styled_df)
+st.dataframe(styled_df)
 
 st.header("Pandas Styler: Gradient Styling")
 
@@ -107,7 +131,7 @@ def make_pretty(styler):
 
 styled_df = weather_df.style.pipe(make_pretty)
 
-st.experimental_data_grid(styled_df)
+st.dataframe(styled_df)
 
 st.header("Various data types")
 
@@ -165,7 +189,7 @@ dft = pd.DataFrame(
 # string_string initially had the 'object' dtype. this line convert it into 'string'
 dft = dft.astype({"string_string": "string"})
 
-st.experimental_data_grid(dft)
+st.dataframe(dft)
 
 st.header("Numeric dtypes in pd.DataFrame")
 int_df = pd.DataFrame(
@@ -183,7 +207,7 @@ int_df = pd.DataFrame(
         "float16": pd.array(np.random.rand(5), dtype="float16"),
     }
 )
-st.experimental_data_grid(int_df)
+st.dataframe(int_df)
 
 st.header("Interval dtypes in pd.DataFrame")
 n_rows = 10
@@ -213,7 +237,7 @@ interval_df = pd.DataFrame(
         ],
     }
 )
-st.experimental_data_grid(interval_df)
+st.dataframe(interval_df)
 
 st.header("Missing data")
 df = pd.DataFrame(
@@ -226,7 +250,7 @@ df["five"] = df["one"] > 0
 df_nan = df.reindex(["a", "b", "c", "d", "e", "f", "g", "h"])
 df_nan["timestamp"] = pd.Timestamp("20220315")
 df_nan.loc[["a", "c", "h"], ["one", "timestamp"]] = np.nan
-st.experimental_data_grid(df_nan)
+st.dataframe(df_nan)
 
 st.header("Input Data: pyarrow.Table")
 df_arr1 = pd.DataFrame(
@@ -237,7 +261,7 @@ df_arr1 = pd.DataFrame(
     }
 )
 table1 = pa.Table.from_pandas(df_arr1)
-st.experimental_data_grid(table1)
+st.dataframe(table1)
 
 st.header("Input Data: numpy.ndarray")
 np_array = np.ndarray(
@@ -247,7 +271,7 @@ np_array = np.ndarray(
     offset=8 * np.int_().itemsize,
     order="F",
 )
-st.experimental_data_grid(np_array)
+st.dataframe(np_array)
 
 st.header("Input Data: dict")
 dict = {
@@ -257,16 +281,16 @@ dict = {
     "color 🌈": ["Black ⚫", "Red 🔴", "White ⚪", "Red 🔴"],
     "emoji 🚀🚀": ["👨🏻‍🚀", "👩🏻‍🚀", "👩🏻‍🚒🚀", "👨🏻‍🚒"],
 }
-st.experimental_data_grid(dict)
+st.dataframe(dict)
 
 st.header("Input Data: List")
-st.experimental_data_grid(["apple", "banana", "cherry", "apple", "cherry"])
+st.dataframe(["apple", "banana", "cherry", "apple", "cherry"])
 
 st.header("Input Data: 1-d tuple")
-st.experimental_data_grid(("apple", "banana", "cherry", "apple", "cherry"))
+st.dataframe(("apple", "banana", "cherry", "apple", "cherry"))
 
 st.header("Input Data: 2-d tuple")
-st.experimental_data_grid(
+st.dataframe(
     (
         ("apple", "banana", "cherry", "apple", "cherry"),
         ("obladi", "oblada", "life", "goes", "on"),
@@ -275,7 +299,7 @@ st.experimental_data_grid(
     )
 )
 st.header("Input Data: iter(2-d tuple)")
-st.experimental_data_grid(
+st.dataframe(
     iter(
         (
             ("apple", "banana", "cherry", "apple", "cherry"),
@@ -287,11 +311,11 @@ st.experimental_data_grid(
 )
 
 st.header("Input Data: 1-d set")
-st.experimental_data_grid({"apple", "banana", "cherry", "apple", "cherry"})
+st.dataframe({"apple", "banana", "cherry", "apple", "cherry"})
 
 st.header("Input Data: 2-d list")
 list_1 = [[1, 2, 3, 4, 5], [-1, -2, -3, -4, -5], [10, 20, 30, 40, 50], [6, 7, 8, 9, 10]]
-st.experimental_data_grid(list_1)
+st.dataframe(list_1)
 
 df = pd.DataFrame(
     np.random.randn(50, 36), columns=list("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
