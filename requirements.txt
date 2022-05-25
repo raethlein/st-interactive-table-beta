@@ -1,4 +1,4 @@
-https://github.com/LukasMasuch/st-interactive-table-beta/releases/download/0.0.2/streamlit-1.8.1-py2.py3-none-any.whl
+https://github.com/LukasMasuch/st-interactive-table-beta/releases/download/0.0.3/streamlit-1.9.0-py2.py3-none-any.whl
 pandas
 numpy
 faker
